@@ -1,11 +1,9 @@
-// const User = require('../repositories/models/User');
-// const UserLanguage = require('../repositories/models/UserLanguage');
-// const Language = require('../repositories/models/Language');
 const {
     UserLanguageModel,
     UserModel,
     LanguageModel,
 } = require('./../repositories/models/index');
+const { Op } = require('sequelize');
 
 async function updateLanguages(userId, nativeIds, targetIds) {
     // Remove existing language preferences
@@ -53,4 +51,52 @@ async function updateLanguages(userId, nativeIds, targetIds) {
     };
 }
 
-module.exports = { updateLanguages };
+const findPartners = async (userId, native, target) => {
+    const filtersExist = native && target;
+
+    if (!filtersExist) {
+        // Return all users except current
+        return UserModel.findAll({
+            where: { id: { [Op.ne]: userId } },
+            include: [
+                {
+                    model: UserLanguageModel,
+                    include: [LanguageModel],
+                },
+            ],
+        });
+    }
+
+    // Step 1: Find your native and target languages
+    const yourLanguages = await UserLanguageModel.findAll({
+        where: { user_id: userId },
+    });
+
+    const yourNativeLangs = yourLanguages
+        .filter((l) => l.type === 'native')
+        .map((l) => l.language_id);
+    const yourTargetLangs = yourLanguages
+        .filter((l) => l.type === 'target')
+        .map((l) => l.language_id);
+
+    // Step 2: Find matching users
+    const matchingUsers = await UserModel.findAll({
+        where: { id: { [Op.ne]: userId } },
+        include: [
+            {
+                model: UserLanguageModel,
+                required: true,
+                where: {
+                    [Op.or]: [
+                        { type: 'native', language_id: target }, // they are native in your target
+                        { type: 'target', language_id: native }, // they want to learn your native
+                    ],
+                },
+                include: [LanguageModel],
+            },
+        ],
+    });
+
+    return matchingUsers;
+};
+module.exports = { updateLanguages, findPartners };

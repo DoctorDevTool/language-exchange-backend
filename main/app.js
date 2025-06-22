@@ -13,7 +13,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-// app.use('/api/requests', requestRoutes);
+app.use('/api/requests', requestRoutes);
 
 // DB + Server start
 (async () => {

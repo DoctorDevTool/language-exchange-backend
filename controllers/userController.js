@@ -4,7 +4,7 @@ const {
     LanguageModel,
 } = require('./../repositories/models/index');
 
-const { updateLanguages } = require('./../services/userService');
+const { updateLanguages, findPartners } = require('./../services/userService');
 
 const getMe = async (req, res) => {
     try {
@@ -58,4 +58,16 @@ const putLanguages = async (req, res) => {
     }
 };
 
-module.exports = { getMe, putLanguages };
+const searchPartners = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { native, target } = req.query;
+
+        const partners = await findPartners(userId, native, target);
+        res.json(partners);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+module.exports = { getMe, putLanguages, searchPartners };
