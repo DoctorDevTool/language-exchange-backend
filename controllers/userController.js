@@ -1,19 +1,15 @@
-const {
-    UserLanguageModel,
-    UserModel,
-    LanguageModel,
-} = require('./../repositories/models/index');
+const models = require('./../models/index');
 
 const { updateLanguages, findPartners } = require('./../services/userService');
 
 const getMe = async (req, res) => {
     try {
-        const user = await UserModel.findByPk(req.userId, {
+        const user = await models.User.findByPk(req.userId, {
             attributes: ['id', 'email', 'full_name'],
             include: [
                 {
-                    model: UserLanguageModel,
-                    include: [LanguageModel],
+                    model: models.UserLanguage,
+                    include: [models.Language],
                 },
             ],
         });
@@ -25,7 +21,6 @@ const getMe = async (req, res) => {
         }));
 
         return res.json({
-            // user,
             id: user.id,
             email: user.email,
             full_name: user.full_name,
@@ -37,6 +32,7 @@ const getMe = async (req, res) => {
             .json({ message: 'Server error', error: err.message });
     }
 };
+
 
 const putLanguages = async (req, res) => {
     try {

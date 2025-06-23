@@ -2,7 +2,7 @@ const {
     UserLanguageModel,
     UserModel,
     LanguageModel,
-} = require('./../repositories/models/index');
+} = require('./../models/index');
 const { Op } = require('sequelize');
 
 async function updateLanguages(userId, nativeIds, targetIds) {

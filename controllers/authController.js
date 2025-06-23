@@ -1,18 +1,18 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { UserModel } = require('./../repositories/models/index');
+const models = require('./../models/index');
 
 const register = async (req, res) => {
-    const { email, password, full_name } = req.body;
+    const { email, password, name } = req.body;
     try {
-        const existing = await UserModel.findOne({ where: { email } });
+        const existing = await models.User.findOne({ where: { email } });
         if (existing)
             return res.status(400).json({ message: 'Email already in use' });
 
         const hash = await bcrypt.hash(password, 10);
-        const user = await UserModel.create({
+        const user = await models.User.create({
             email,
-            full_name,
+            name,
             password_hash: hash,
         });
 
@@ -29,7 +29,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await UserModel.findOne({ where: { email } });
+        const user = await models.User.findOne({ where: { email } });
         if (!user)
             return res.status(401).json({ message: 'Invalid credentials' });
 
@@ -42,7 +42,7 @@ const login = async (req, res) => {
         });
         return res.json({
             token,
-            user: { id: user.id, email: user.email, full_name: user.full_name },
+            user: { id: user.id, email: user.email, name: user.name },
         });
     } catch (err) {
         return res

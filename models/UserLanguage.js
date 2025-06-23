@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../main/db');
+const sequelize = require('./../main/db');
 
 const UserLanguage = sequelize.define(
     'UserLanguage',

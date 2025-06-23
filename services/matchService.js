@@ -1,7 +1,7 @@
 const {
     MatchRequestModel,
     UserModel,
-} = require('./../repositories/models/index');
+} = require('./../models/index');
 
 const { Op } = require('sequelize');
 

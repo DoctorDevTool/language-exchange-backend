@@ -1,14 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {
-    getMe,
-    putLanguages,
-    searchPartners,
-} = require('../controllers/userController');
+const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', authMiddleware, searchPartners);
-router.get('/me', authMiddleware, getMe);
-router.put('/me/languages', authMiddleware, putLanguages);
+router.get('/', authMiddleware, userController.searchPartners);
+router.get('/me', authMiddleware, userController.getMe);
+router.put('/me/languages', authMiddleware, userController.putLanguages);
 
 module.exports = router;

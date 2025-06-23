@@ -1,19 +1,21 @@
 require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const sequelize = require('./db');
-const authRoutes = require('../routes/authRoutes');
-const userRoutes = require('../routes/userRoutes');
-const requestRoutes = require('../routes/requestRoutes');
+
+const routes = require('../routes/index');
 const app = express();
 
 const PORT = process.env.PORT || 3333;
 
 app.use(express.json());
+app.use(cors());
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/requests', requestRoutes);
+app.use('/api/auth', routes.authRoutes);
+app.use('/api/users', routes.userRoutes);
+app.use('/api/requests', routes.requestRoutes);
+app.use('/api/languages', routes.languageRoutes);
 
 // DB + Server start
 (async () => {

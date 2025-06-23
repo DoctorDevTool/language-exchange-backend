@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../main/db');
+const sequelize = require('./../main/db');
 
 const MatchRequest = sequelize.define(
     'MatchRequest',
