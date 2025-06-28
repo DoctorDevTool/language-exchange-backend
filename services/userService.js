@@ -1,13 +1,10 @@
-const {
-    UserLanguageModel,
-    UserModel,
-    LanguageModel,
-} = require('./../models/index');
-const { Op } = require('sequelize');
+const models = require('./../models/index');
+const { Op, where } = require('sequelize');
 
 async function updateLanguages(userId, nativeIds, targetIds) {
     // Remove existing language preferences
-    await UserLanguageModel.destroy({ where: { user_id: userId } });
+    await models.UserLanguage.destroy({ where: { user_id: userId } });
+    // await models.UserLanguage.find;
 
     // Build new insert list
     const inserts = [
@@ -24,15 +21,15 @@ async function updateLanguages(userId, nativeIds, targetIds) {
     ];
 
     // Bulk insert new preferences
-    await UserLanguageModel.bulkCreate(inserts);
+    await models.UserLanguage.bulkCreate(inserts);
 
     // Fetch updated user with languages
-    const user = await UserModel.findByPk(userId, {
+    const user = await models.User.findByPk(userId, {
         attributes: ['id', 'email', 'full_name'],
         include: [
             {
-                model: UserLanguageModel,
-                include: [LanguageModel],
+                model: models.UserLanguage,
+                include: [models.Language],
             },
         ],
     });
@@ -56,47 +53,55 @@ const findPartners = async (userId, native, target) => {
 
     if (!filtersExist) {
         // Return all users except current
-        return UserModel.findAll({
+        return models.User.findAll({
             where: { id: { [Op.ne]: userId } },
             include: [
                 {
-                    model: UserLanguageModel,
-                    include: [LanguageModel],
+                    model: models.UserLanguage,
+                    include: [models.Language],
                 },
             ],
         });
     }
 
     // Step 1: Find your native and target languages
-    const yourLanguages = await UserLanguageModel.findAll({
-        where: { user_id: userId },
+    const targetLanguages = await models.UserLanguage.findAll({
+        where: {
+            user_id: { [Op.ne]: userId },
+            language_id: target,
+            type: 'target',
+        },
+    });
+    const nativeLanguages = await models.UserLanguage.findAll({
+        where: {
+            user_id: { [Op.ne]: userId },
+            language_id: native,
+            type: 'native',
+        },
     });
 
-    const yourNativeLangs = yourLanguages
-        .filter((l) => l.type === 'native')
-        .map((l) => l.language_id);
-    const yourTargetLangs = yourLanguages
-        .filter((l) => l.type === 'target')
-        .map((l) => l.language_id);
+    const usersId = [];
+    targetLanguages.forEach((lang) => {
+        for (let i = 0; i < nativeLanguages.length; i++) {
+            if (nativeLanguages[i].user_id === lang.user_id) {
+                usersId.push(lang.user_id);
+            }
+        }
+    });
 
     // Step 2: Find matching users
-    const matchingUsers = await UserModel.findAll({
-        where: { id: { [Op.ne]: userId } },
+    const allMatchByNative = await models.User.findAll({
+        where: {
+            id: { [Op.in]: usersId },
+        },
         include: [
             {
-                model: UserLanguageModel,
-                required: true,
-                where: {
-                    [Op.or]: [
-                        { type: 'native', language_id: target }, // they are native in your target
-                        { type: 'target', language_id: native }, // they want to learn your native
-                    ],
-                },
-                include: [LanguageModel],
+                model: models.UserLanguage,
+                include: [models.Language],
             },
         ],
     });
 
-    return matchingUsers;
+    return allMatchByNative;
 };
 module.exports = { updateLanguages, findPartners };

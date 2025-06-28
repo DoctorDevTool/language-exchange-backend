@@ -1,7 +1,4 @@
-const {
-    MatchRequestModel,
-    UserModel,
-} = require('./../models/index');
+const models = require('./../models/index');
 
 const { Op } = require('sequelize');
 
@@ -10,35 +7,47 @@ const createRequest = async (fromUserId, toUserId) => {
         throw new Error('Cannot send request to yourself');
     }
 
-    return await MatchRequestModel.create({
+    return await models.MatchRequest.create({
         from_user_id: fromUserId,
         to_user_id: toUserId,
         status: 'pending',
     });
 };
 
+const deleteRequest = async (reqId) => {
+    if (!reqId) {
+        throw new Error('There is no request found');
+    }
+
+    return await models.MatchRequest.destroy({
+        where: {
+            id: reqId,
+        },
+    });
+};
+
 const fetchIncoming = async (userId) => {
-    return await MatchRequestModel.findAll({
+    return await models.MatchRequest.findAll({
         where: {
             to_user_id: userId,
             status: 'pending',
         },
-        include: [{ model: UserModel, as: 'fromUser' }],
+        include: [{ model: models.User, as: 'fromUser' }],
     });
 };
 
 const fetchOutgoing = async (userId) => {
-    return await MatchRequestModel.findAll({
+    return await models.MatchRequest.findAll({
         where: {
             from_user_id: userId,
             status: 'pending',
         },
-        include: [{ model: UserModel, as: 'toUser' }],
+        include: [{ model: models.User, as: 'toUser' }],
     });
 };
 
 const acceptRequest = async (requestId, userId) => {
-    const request = await MatchRequestModel.findOne({
+    const request = await models.MatchRequest.findOne({
         where: { id: requestId },
     });
     if (!request || request.to_user_id !== userId) {
@@ -51,7 +60,7 @@ const acceptRequest = async (requestId, userId) => {
 };
 
 const declineRequest = async (requestId, userId) => {
-    const request = await MatchRequestModel.findOne({
+    const request = await models.MatchRequest.findOne({
         where: { id: requestId },
     });
     if (!request || request.to_user_id !== userId) {
@@ -64,7 +73,7 @@ const declineRequest = async (requestId, userId) => {
 };
 
 const fetchMatches = async (userId) => {
-    return await MatchRequestModel.findAll({
+    return await models.MatchRequest.findAll({
         where: {
             status: 'accepted',
             [Op.or]: [{ from_user_id: userId }, { to_user_id: userId }],
@@ -78,6 +87,7 @@ const fetchMatches = async (userId) => {
 
 module.exports = {
     createRequest,
+    deleteRequest,
     fetchIncoming,
     fetchOutgoing,
     acceptRequest,

@@ -15,6 +15,17 @@ const createRequest = async (req, res) => {
     }
 };
 
+const deleteRequest = async (req, res) => {
+    try {
+        const reqId = req.params.id;
+        await matchService.deleteRequest(reqId);
+
+        res.json(reqId);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
 const fetchIncoming = async (req, res) => {
     const requests = await matchService.fetchIncoming(req.userId);
     res.json(requests);
@@ -56,6 +67,7 @@ const fetchMatches = async (req, res) => {
 
 module.exports = {
     createRequest,
+    deleteRequest,
     fetchIncoming,
     fetchOutgoing,
     acceptRequest,

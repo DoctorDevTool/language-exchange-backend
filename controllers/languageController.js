@@ -2,10 +2,11 @@ const models = require('./../models/index');
 
 const createLanguage = async (req, res) => {
     try {
-        //check if language already exists by language_name
         const language_name = req.body.language_name;
-        
-        const newLanguage = await models.Language.create({ name: language_name });
+
+        const newLanguage = await models.Language.create({
+            name: language_name,
+        });
         return res.status(201).json(newLanguage);
     } catch (err) {
         return res

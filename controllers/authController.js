@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const models = require('./../models/index');
 
 const register = async (req, res) => {
-    const { email, password, name } = req.body;
+    const { email, password, full_name } = req.body;
     try {
         const existing = await models.User.findOne({ where: { email } });
         if (existing)
@@ -12,7 +12,7 @@ const register = async (req, res) => {
         const hash = await bcrypt.hash(password, 10);
         const user = await models.User.create({
             email,
-            name,
+            full_name,
             password_hash: hash,
         });
 
@@ -42,7 +42,7 @@ const login = async (req, res) => {
         });
         return res.json({
             token,
-            user: { id: user.id, email: user.email, name: user.name },
+            user: { id: user.id, email: user.email, full_name: user.full_name },
         });
     } catch (err) {
         return res

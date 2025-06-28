@@ -1,5 +1,4 @@
 const models = require('./../models/index');
-
 const { updateLanguages, findPartners } = require('./../services/userService');
 
 const getMe = async (req, res) => {
@@ -32,7 +31,6 @@ const getMe = async (req, res) => {
             .json({ message: 'Server error', error: err.message });
     }
 };
-
 
 const putLanguages = async (req, res) => {
     try {
