@@ -13,10 +13,10 @@ const getMe = async (req, res) => {
             ],
         });
 
-        const languages = user.UserLanguages.map((ul) => ({
-            language_id: ul.language_id,
-            type: ul.type,
-            name: ul.Language.name,
+        const languages = user.UserLanguages.map((lang) => ({
+            language_id: lang.language_id,
+            type: lang.type,
+            name: lang.Language.name,
         }));
 
         return res.json({

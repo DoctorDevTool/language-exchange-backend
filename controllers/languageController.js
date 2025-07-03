@@ -16,8 +16,15 @@ const createLanguage = async (req, res) => {
 };
 
 const getLanguages = async (req, res) => {
-    const languages = await models.Language.findAll();
-    return res.json(languages);
+    try {
+        const languages = await models.Language.findAll();
+
+        return res.json(languages);
+    } catch (err) {
+        return res
+            .status(500)
+            .json({ message: 'Server error', error: err.message });
+    }
 };
 
 module.exports = { createLanguage, getLanguages };
