@@ -64,7 +64,7 @@ const findPartners = async (userId, native, target) => {
         });
     }
 
-    // Step 1: Find your native and target languages
+    // Step 1: Find all wanted native and target languages
     const targetLanguages = await models.UserLanguage.findAll({
         where: {
             user_id: { [Op.ne]: userId },
@@ -80,6 +80,7 @@ const findPartners = async (userId, native, target) => {
         },
     });
 
+    // Step 2: Find IDs of users matching for native and target
     const usersId = [];
     targetLanguages.forEach((lang) => {
         for (let i = 0; i < nativeLanguages.length; i++) {
@@ -89,8 +90,8 @@ const findPartners = async (userId, native, target) => {
         }
     });
 
-    // Step 2: Find matching users
-    const allMatchByNative = await models.User.findAll({
+    // Step 3: Find matching users
+    const allMatch = await models.User.findAll({
         where: {
             id: { [Op.in]: usersId },
         },
@@ -102,6 +103,6 @@ const findPartners = async (userId, native, target) => {
         ],
     });
 
-    return allMatchByNative;
+    return allMatch;
 };
 module.exports = { updateLanguages, findPartners };

@@ -40,15 +40,14 @@ const fetchOutgoing = async (userId) => {
     return await models.MatchRequest.findAll({
         where: {
             from_user_id: userId,
-            status: 'pending',
         },
         include: [{ model: models.User, as: 'toUser' }],
     });
 };
 
-const acceptRequest = async (requestId, userId) => {
+const acceptRequest = async (reqId, userId) => {
     const request = await models.MatchRequest.findOne({
-        where: { id: requestId },
+        where: { id: reqId },
     });
     if (!request || request.to_user_id !== userId) {
         throw new Error('Unauthorized or not found');
@@ -79,8 +78,8 @@ const fetchMatches = async (userId) => {
             [Op.or]: [{ from_user_id: userId }, { to_user_id: userId }],
         },
         include: [
-            { model: User, as: 'fromUser' },
-            { model: User, as: 'toUser' },
+            { model: models.User, as: 'fromUser' },
+            { model: models.User, as: 'toUser' },
         ],
     });
 };

@@ -4,6 +4,11 @@ const models = require('./../models/index');
 
 const register = async (req, res) => {
     const { email, password, full_name } = req.body;
+    if (password.length < 6) {
+        return res
+            .status(400)
+            .json({ message: 'Password must be 6 simbols minimum' });
+    }
     try {
         const existing = await models.User.findOne({ where: { email } });
         if (existing)
