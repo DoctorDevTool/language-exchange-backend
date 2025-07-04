@@ -18,7 +18,7 @@ Create a `.env` file in the root of your project with the following:
 
 ```env
 DB_HOST=localhost
-DB_PORT=4444
+DB_PORT=your_db_port (by defolt 5432)
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_NAME=language_exchange
@@ -26,10 +26,22 @@ JWT_SECRET=your_jwt_secret_key
 PORT=3333
 ```
 
-## commands to start the app
+## APP Setup
 
-npm start
-npm run dev (if you using nodemon)
+**install all dependencies**
+"bcryptjs"
+"cors"
+"dotenv"
+"express"
+"jsonwebtoken"
+"pg"
+"pg-hstore"
+"sequelize"
+
+**in package.json add this script**
+"start": "node main/app.js"
+
+npm start _this is the command to start the app_
 
 ## API Endpoints Overview
 
