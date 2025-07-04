@@ -4,6 +4,18 @@ const createLanguage = async (req, res) => {
     try {
         const language_name = req.body.language_name;
 
+        const existing = await models.Language.findAll();
+
+        const dublicate = existing.find(
+            (lang) => lang.name.toUpperCase() === language_name.toUpperCase()
+        );
+
+        if (dublicate) {
+            return res.status(401).json({
+                message: 'This language already exist',
+            });
+        }
+
         const newLanguage = await models.Language.create({
             name: language_name,
         });

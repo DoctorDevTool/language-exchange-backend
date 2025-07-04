@@ -18,7 +18,7 @@ const deleteRequest = async (req, res) => {
         await reqService.deleteRequest(reqId);
 
         res.json({
-            message: 'Succefuly deleted!',
+            reqId,
         });
     } catch (err) {
         res.status(400).json({ error: err.message });
