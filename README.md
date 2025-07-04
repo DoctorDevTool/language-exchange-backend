@@ -28,7 +28,7 @@ PORT=3333
 
 ## APP Setup
 
-**install all dependencies**\
+**install all dependencies**
 
 -   "bcryptjs"
 -   "cors"
@@ -49,7 +49,7 @@ PORT=3333
 
 _auth_\
 POST/api/auth/register **--register user**\
-POST/api/auth/login **login**
+POST/api/auth/login **--login**
 
 _user_\
 GET/api/users **--search partners**\
