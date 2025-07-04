@@ -28,15 +28,15 @@ PORT=3333
 
 ## APP Setup
 
-**install all dependencies**
-"bcryptjs"
-"cors"
-"dotenv"
-"express"
-"jsonwebtoken"
-"pg"
-"pg-hstore"
-"sequelize"
+**install all dependencies**\
+"bcryptjs"\
+"cors"\
+"dotenv"\
+"express"\
+"jsonwebtoken"\
+"pg"\
+"pg-hstore"\
+"sequelize"\
 
 **in package.json add this script**
 "start": "node main/app.js"
