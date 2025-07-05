@@ -28,6 +28,10 @@ PORT=3333
 
 ## APP Setup
 
+### **initialise node**
+
+npm init
+
 ### **install all dependencies**
 
 -   "bcryptjs"
