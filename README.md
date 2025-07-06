@@ -18,8 +18,8 @@ Create a `.env` file in the root of your project with the following:
 
 ```env
 DB_HOST=localhost
-DB_PORT=your_db_port (by defolt 5432)
-DB_USER=your_db_user
+DB_PORT=your_db_port (by default 5432)
+DB_USER=your_db_user (by default postgres)
 DB_PASSWORD=your_db_password
 DB_NAME=language_exchange
 JWT_SECRET=your_jwt_secret_key
@@ -28,7 +28,7 @@ PORT=3333
 
 ## APP Setup
 
-### **initialise node**
+### **initialise the project**
 
 npm init
 
