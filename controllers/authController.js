@@ -9,7 +9,7 @@ const register = async (req, res) => {
     if (password.length < 6) {
         return res
             .status(400)
-            .json({ message: 'Password must be 6 simbols minimum' });
+            .json({ message: 'Password must be 6 symbols minimum' });
     }
     try {
         // checking if email is avalable

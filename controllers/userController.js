@@ -13,12 +13,14 @@ const getMe = async (req, res) => {
             ],
         });
 
+        // destructing languages info
         const languages = user.UserLanguages.map((lang) => ({
             language_id: lang.language_id,
             type: lang.type,
             name: lang.Language.name,
         }));
 
+        // res only needed info
         return res.json({
             id: user.id,
             email: user.email,
